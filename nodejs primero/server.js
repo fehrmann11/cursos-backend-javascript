@@ -40,6 +40,8 @@ router.post('/message', (req,res)=>{
     
 });
 
+app.use('/app',express.static('public'));
+
 
 //Puerto
 app.listen(8080);
