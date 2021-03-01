@@ -5,29 +5,31 @@ const router = express.Router();
 //importo las respuestas !!
 const response = require('../../network/response');
 
+const controller = require('./controller');
+
 //solo get
 router.get('/', (req,res)=>{
-    //incluir cabeceras
-    console.log(req.headers);
-    //mandar headers
-    res.header({
-        "custom-header":"Nuestro valor personalizado",
+   controller.getMessages()
+    .then((messageList)=>{
+        response.success(req,res,messageList,200);
     })
-    //res.send('lista de mensajes');
-    response.success(req,res,'Lista de mensajes');
+    .catch(e=>{
+        response.error(req,res,'Unexpected Error',500,e);
+    })
 });
 
 //solo post
 router.post('/', (req,res)=>{
-    console.log(req.query)//viene de la url
-    //console.log(req.body);//viene del cuerpo
-    if(req.query.error=='ok'){
-        response.error(req,res,'Error inesperado',500,'Es solo una simulación de los errores');
-    }else{
-        response.success(req,res,'creado correctamente',201);
-    }
-    //text viene del body 
-    //res.status(201).send([{error:'',body:'creado correctamente'}]);
+    
+    //!!
+    controller.addMessage(req.body.user,req.body.message)
+    .then((fullMessage)=>{
+        response.success(req,res,fullMessage,201);
+    })
+    .catch(e =>{
+        response.error(req,res,'Información inválida',400,'Error en el login');
+    });
+
     
 });
 //envía las dos rutas
