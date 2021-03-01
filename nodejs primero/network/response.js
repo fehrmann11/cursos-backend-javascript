@@ -7,7 +7,9 @@ exports.success = (req,res,message,status)=>{
     });
 }
 
-exports.error = (req,res,message,status)=>{
+exports.error = (req,res,message,status,details)=>{
+    //detalles del error
+    console.error('[response error]'+details);
     res.status(status||500).send({
         error:message,
         body:''

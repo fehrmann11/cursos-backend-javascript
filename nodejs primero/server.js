@@ -31,7 +31,7 @@ router.post('/message', (req,res)=>{
     console.log(req.query)//viene de la url
     //console.log(req.body);//viene del cuerpo
     if(req.query.error=='ok'){
-        response.error(req,res,'Error simulado',400);
+        response.error(req,res,'Error inesperado',500,'Es solo una simulación de los errores');
     }else{
         response.success(req,res,'creado correctamente',201);
     }
