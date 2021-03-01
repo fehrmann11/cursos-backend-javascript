@@ -3,9 +3,13 @@ const express = require('express');
 const bodyParser = require('body-parser');
 //body parser
 
+const db = require('./db');
+
 //importo el network.js que tiene los post get...
 //const router = require('./components/message/network');
 const router = require('./network/routes');
+
+db('mongodb+srv://usuario:@cluster0.zbglt.mongodb.net/myFirstDatabase?retryWrites=true&w=majority');
 
 
 var app = express();

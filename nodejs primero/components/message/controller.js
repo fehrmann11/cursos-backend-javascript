@@ -23,13 +23,47 @@ const addMessage = (user,message) =>{
 }
 
 //utilizamos promesas para tener el control si algo falla o no
-const getMessages = ()=>{
+const getMessages = (filterUser)=>{
     return new Promise((resolve,reject)=>{
-        resolve(store.list());
+        resolve(store.list(filterUser));
     })
+}
+
+//actualizar un mensaje
+const updateMessage = (id,message) =>{
+    return new Promise(async(resolve,reject)=>{
+        console.log(id)
+        console.log(message)
+        if(!id || !message){
+   
+            reject('Invalid data');
+            return false;
+        }
+        const result = await store.updateText(id,message);
+        resolve(result);
+    })
+}
+
+//eliminar
+const deleteMessage = (id) =>{
+    return new Promise((resolve,reject)=>{
+        if(!id){
+            reject('Parámetros o id inválidos');
+            return false;
+        }
+        store.remove(id)
+            .then(()=>{
+                resolve();
+            })
+            .catch(e =>{
+                reject(e);
+            });
+    });
 }
 
 module.exports = {
     addMessage,
-    getMessages
+    getMessages,
+    updateMessage,
+    deleteMessage
 };
