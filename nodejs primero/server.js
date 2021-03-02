@@ -9,7 +9,7 @@ const db = require('./db');
 //const router = require('./components/message/network');
 const router = require('./network/routes');
 
-db('mongodb+srv://usuario:@cluster0.zbglt.mongodb.net/myFirstDatabase?retryWrites=true&w=majority');
+db('mongodb+srv://usuario:usuario@cluster0.zbglt.mongodb.net/myFirstDatabase?retryWrites=true&w=majority');
 
 
 var app = express();

@@ -13,14 +13,25 @@ const addMessage = (message) => {
 
 //obtiene mensajes
 const getMessages = async(filterUser) =>{
-    let filter = {};
-    if(filterUser !== null){
-        //creamos filtro de mongo
-        filter = {user:filterUser}
-    }
-    //Pedimos todos los documentos
-    const messages = await Model.find(filter);
-    return messages;
+    return new Promise((resolve,reject)=>{
+        let filter = {};
+        if(filterUser !== null){
+            //creamos filtro de mongo
+            filter = {user:filterUser}
+        }
+        //Pedimos todos los documentos
+        Model.find(filter)
+        //busca dentro de cada elemento popula
+            .populate('user')
+            .exec((error,populated)=>{
+                if(error){
+                    reject(error);
+                    return false;
+                }
+                resolve(populated);
+            });
+    })
+    
 }
 
 //actualiza mensajes
