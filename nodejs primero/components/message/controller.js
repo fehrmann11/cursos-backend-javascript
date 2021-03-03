@@ -1,20 +1,32 @@
 //acá viene el usuario, el mensaje y la fecha
 //cuando cambiemos el store, no es necesario hacer cambio en el controlador
+const  socket  = require('../../socket').socket;
 const store = require('./store');
 
-const addMessage = (user,message) =>{
+const addMessage = (chat,user,message,file) =>{
     return new Promise((resolve,reject)=>{
-        if(!user || !message){
+        if(!user || !message || !chat){
             console.error('[messageController]: No hay usuario o mensaje');
             return reject('Los datos son incorrectos');
         }
+
+        let fileUrl='';
+        if(file){
+            fileUrl = 'http://localhost:8080/app/files/' + file.filename;
+        }
+
         const fullMessage = {
+            chat:chat,
             user:user,
             message:message,
             date:new Date(),
+            file: fileUrl,
         };
 
         store.add(fullMessage);
+
+        //socket enviar mensajes
+        socket.io.emit('message',fullMessage);
     
         console.log(fullMessage);
         resolve(fullMessage);

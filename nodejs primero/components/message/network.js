@@ -1,11 +1,17 @@
 const express = require('express');
-
+const multer = require('multer');
 const router = express.Router();
 
 //importo las respuestas !!
 const response = require('../../network/response');
 
 const controller = require('./controller');
+
+
+//prerpando multer (dest el destino)
+const upload = multer({
+    dest:'public/files/',
+})
 
 //solo get
 router.get('/', (req,res)=>{
@@ -21,10 +27,11 @@ router.get('/', (req,res)=>{
 });
 
 //solo post
-router.post('/', (req,res)=>{
-    
+router.post('/',upload.single('file'), (req,res)=>{
+    //para entrar al fichero
+    console.log(req.file);
     //!!
-    controller.addMessage(req.body.user,req.body.message)
+    controller.addMessage(req.body.chat,req.body.user,req.body.message,req.file)
     .then((fullMessage)=>{
         response.success(req,res,fullMessage,201);
     })
