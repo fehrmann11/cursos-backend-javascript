@@ -1,9 +1,25 @@
+const statusMessages = {
+    '200':'Done',
+    '201':'Created',
+    '400':'Invalid format',
+    '500':'Internal error'
+}
+
 //respuesta correcta
 exports.success = (req,res,message,status)=>{
     //si no me viene un status mandame un 200
-    res.status(status || 200).send({
+
+    let statusCode = status;
+    let StatusMessage = message;
+    if(!status){
+        status = 200;
+    }
+    if(!message){
+        statusMessage = statusMessages[status];
+    }
+    res.status(statusCode).send({
         error:'',
-        body:message
+        body:StatusMessage
     });
 }
 

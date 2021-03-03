@@ -4,3 +4,4 @@
 #git commit -m 'Remove the now ignored directory node_modules'
 #git push origin <branch-name>
 node_modules/
+config.js

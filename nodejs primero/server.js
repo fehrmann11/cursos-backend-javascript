@@ -1,6 +1,8 @@
 const express = require('express');
 const app = express();
 const server = require('http').Server(app);
+//cors para poder consumirlo
+const cors = require('cors');
 //nos permite separa cabeceras, métodos, urls.
 const bodyParser = require('body-parser');
 const db = require('./db');
@@ -10,9 +12,11 @@ const router = require('./network/routes');
 //me traigo el socket
 const socket = require('./socket');
 
-db('mongodb+srv://usuario:@cluster0.zbglt.mongodb.net/myFirstDatabase?retryWrites=true&w=majority');
+const config = require('./config');
 
+db(config.dbUrl);
 
+app.use(cors());
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -23,10 +27,10 @@ router(app);
 
 
 
-app.use('/app',express.static('public'));
+app.use(`/${config.publicRoute}`,express.static('public'));
 
 
 //Puerto
-server.listen(8080,()=>{
-    console.log('La aplicación está tuteando en http://localhost:8080');
+server.listen(config.port,()=>{
+    console.log(`La aplicación está escuchando en ${config.host}:${config.port}`);
 });
