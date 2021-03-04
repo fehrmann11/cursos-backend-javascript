@@ -1,0 +1,185 @@
+{
+    "swagger": "2.0",
+    "info": {
+      "description": "Una red social en nodejs",
+      "version": "1.0.0",
+      "title": "Red social Node"
+    },
+    "host": "localhost:300",
+    "basePath": "/api",
+    "tags": [
+      {
+        "name": "user",
+        "description": "Operaciones sobre el usuario"
+      }
+    ],
+    "schemes": [
+      "http"
+    ],
+    "paths": {
+      "/user": {
+        "get": {
+          "tags": [
+            "user"
+          ],
+          "summary": "Lista los usuarios",
+          "operationId": "listUser",
+          "responses": {
+            "default": {
+              "description": "Lista de usuarios"
+            }
+          }
+        },
+        "post": {
+          "tags": [
+            "user"
+          ],
+          "summary": "Crea un usuario",
+          "description": "Crea un usuario en nuestra app",
+          "operationId": "createUser",
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "in": "body",
+              "name": "body",
+              "description": "Usuario creado",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/User"
+              }
+            }
+          ],
+          "responses": {
+            "default": {
+              "description": "successful operation"
+            }
+          }
+        },
+        "put": {
+          "tags": [
+            "user"
+          ],
+          "summary": "Actualización de usuario",
+          "operationId": "updateUser",
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "in": "body",
+              "name": "body",
+              "description": "Usuario creado",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/UserPut"
+              }
+            }
+          ],
+          "responses": {
+            "default": {
+              "description": "201 actualizado correctamente"
+            }
+          }
+        }
+      },
+      "/user/{userId}": {
+        "get": {
+          "tags": [
+            "user"
+          ],
+          "summary": "Obtener un usuario",
+          "operationId": "oneUser",
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "name": "userId",
+              "in": "path",
+              "description": "ID de los usuarios",
+              "required": true,
+              "type": "string"
+            }
+          ],
+          "responses": {
+            "default": {
+              "description": "Lista de usuarios"
+            }
+          }
+        },
+        "delete": {
+          "tags": [
+            "user"
+          ],
+          "summary": "Eliminar usuario",
+          "operationId": "deleteUser",
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "name": "userId",
+              "in": "path",
+              "description": "ID de los usuarios",
+              "required": true,
+              "type": "string"
+            }
+          ],
+          "responses": {
+            "default": {
+              "description": "usuario eliminado"
+            }
+          }
+        }
+      }
+    },
+    "securityDefinitions": {
+      "petstore_auth": {
+        "type": "oauth2",
+        "authorizationUrl": "http://petstore.swagger.io/oauth/dialog",
+        "flow": "implicit",
+        "scopes": {
+          "write:pets": "modify pets in your account",
+          "read:pets": "read your pets"
+        }
+      },
+      "api_key": {
+        "type": "apiKey",
+        "name": "api_key",
+        "in": "header"
+      }
+    },
+    "definitions": {
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        }
+      },
+      "UserPut": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "externalDocs": {
+      "description": "Find out more about Swagger",
+      "url": "http://swagger.io"
+    }
+  }

@@ -4,21 +4,6 @@ const Controller = require('./index');
 const router = express.Router();
 
 
-
-// function list(req,res){
-//     Controller.list()
-//     .then((list) => {
-//         response.success(req, res, list, 200);
-//     })
-//     .catch((err) => {
-//         response.error(req, res, err.message, 500);
-//     });
-// }
-
-
-//Al hacerlo como un async en dummy,
-//Controller.list() es una promesa
-
 const list = (req,res)=>{
     Controller.list()
     .then((list) => {
