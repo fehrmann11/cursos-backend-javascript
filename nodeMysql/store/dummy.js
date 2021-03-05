@@ -5,7 +5,7 @@ const db = {
 };
 
 const list = async(table) =>{
-    return db[table];
+    return db[table] || [];
 }
 
 const get = async(table,id) =>{
@@ -14,16 +14,30 @@ const get = async(table,id) =>{
 }
 
 const upsert = async(table,data) =>{
+    if(!db[table]){
+        db[table]=[];
+    }
     db[table].push(data);
+    console.log(db);
 }
 
 const remove = async(table,id) =>{
     return true;
 }
 
+//login
+const query = async(table,q)=>{
+    //traer la lista de usuarios y filtrar (username === al valor de la key)
+    let col = await list(table);
+    let keys = Object.keys(q);
+    let key = keys[0];
+    return col.filter(item => item[key]===q[key])[0] || null;
+}
+
 module.exports={
     list,
     get,
     upsert,
-    remove
+    remove,
+    query
 };
