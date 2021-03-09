@@ -1,24 +1,26 @@
 const express = require('express');
+const bodyParser = require('body-parser');
+
+const swaggerUi = require('swagger-ui-express');
+
 const config = require('../config.js');
-const swaggerUI = require('swagger-ui-express');
 const user = require('./components/user/network');
 const auth = require('./components/auth/network');
-const bodyParser = require('body-parser');
+const errors = require('../network/errors');
+
 const app = express();
 
-//body parser nos permite trabajar con la data en json
 app.use(bodyParser.json());
 
 const swaggerDoc = require('./swagger.json');
 
+// ROUER
+app.use('/api/user', user);
+app.use('/api/auth', auth);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc));
 
-//Definir las rutas
-app.use('/api/user',user);
-app.use('/api/auth',auth);
-app.use('/api-docs',swaggerUI.serve, swaggerUI.setup(swaggerDoc));
+app.use(errors);
 
-
-//donde se abrirá
-app.listen(config.api.port,()=>{
-    console.log(`Api escuchando en el puerto ${config.api.port}`);
+app.listen(config.api.port, () => {
+    console.log('Api escuchando en el puerto ', config.api.port);
 });

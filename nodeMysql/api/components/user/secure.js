@@ -1,21 +1,18 @@
-//exporta un midelware
 const auth = require('../../../auth');
-module.exports = function checkAuth(action){
 
-    const middleware = (req,res,next)=>{
-        switch (action) {
+module.exports = function checkAuth(action) {
+    function middleware(req, res, next) {
+        switch(action) {
             case 'update':
-                //objeto con funciones (el usuario que lo quiere modificar)
                 const owner = req.body.id;
-                auth.check.own(req,owner);
-                break;
-        
-            default:
+                auth.check.own(req, owner);
                 next();
                 break;
+
+            default:
+                next();
         }
     }
 
     return middleware;
-
 }

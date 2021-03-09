@@ -1,11 +1,11 @@
 {
     "swagger": "2.0",
     "info": {
-      "description": "Una red social en nodejs",
+      "description": "Una red social en NodeJS",
       "version": "1.0.0",
-      "title": "Red social Node"
+      "title": "RedSocialNode"
     },
-    "host": "localhost:300",
+    "host": "localhost:3000",
     "basePath": "/api",
     "tags": [
       {
@@ -22,7 +22,7 @@
           "tags": [
             "user"
           ],
-          "summary": "Lista los usuarios",
+          "summary": "Lista los usuario",
           "operationId": "listUser",
           "responses": {
             "default": {
@@ -56,82 +56,6 @@
               "description": "successful operation"
             }
           }
-        },
-        "put": {
-          "tags": [
-            "user"
-          ],
-          "summary": "Actualización de usuario",
-          "operationId": "updateUser",
-          "produces": [
-            "application/json"
-          ],
-          "parameters": [
-            {
-              "in": "body",
-              "name": "body",
-              "description": "Usuario creado",
-              "required": true,
-              "schema": {
-                "$ref": "#/definitions/UserPut"
-              }
-            }
-          ],
-          "responses": {
-            "default": {
-              "description": "201 actualizado correctamente"
-            }
-          }
-        }
-      },
-      "/user/{userId}": {
-        "get": {
-          "tags": [
-            "user"
-          ],
-          "summary": "Obtener un usuario",
-          "operationId": "oneUser",
-          "produces": [
-            "application/json"
-          ],
-          "parameters": [
-            {
-              "name": "userId",
-              "in": "path",
-              "description": "ID de los usuarios",
-              "required": true,
-              "type": "string"
-            }
-          ],
-          "responses": {
-            "default": {
-              "description": "Lista de usuarios"
-            }
-          }
-        },
-        "delete": {
-          "tags": [
-            "user"
-          ],
-          "summary": "Eliminar usuario",
-          "operationId": "deleteUser",
-          "produces": [
-            "application/json"
-          ],
-          "parameters": [
-            {
-              "name": "userId",
-              "in": "path",
-              "description": "ID de los usuarios",
-              "required": true,
-              "type": "string"
-            }
-          ],
-          "responses": {
-            "default": {
-              "description": "usuario eliminado"
-            }
-          }
         }
       }
     },
@@ -158,7 +82,7 @@
           "id": {
             "type": "string"
           },
-          "name": {
+          "username": {
             "type": "string"
           },
           "password": {
@@ -166,13 +90,17 @@
           }
         }
       },
-      "UserPut": {
+      "ApiResponse": {
         "type": "object",
         "properties": {
-          "name": {
+          "code": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "type": {
             "type": "string"
           },
-          "password": {
+          "message": {
             "type": "string"
           }
         }

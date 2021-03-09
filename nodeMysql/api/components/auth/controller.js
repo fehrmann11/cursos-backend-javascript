@@ -1,52 +1,47 @@
 const bcrypt = require('bcrypt');
+
 const auth = require('../../../auth');
 const TABLA = 'auth';
-module.exports = (injectedStore) => {
+
+module.exports = function (injectedStore) {
     let store = injectedStore;
     if (!store) {
         store = require('../../../store/dummy');
     }
 
-
-    //login 
-    const login = async (username, password) => {
-        //la tabla y en ese caso que busque username que sea el username
+    async function login(username, password) {
+        console.log(username,password);
         const data = await store.query(TABLA, { username: username });
-
-        //descifrar la contraseña devuelve una promesa con un valor true o false.
+        
         return bcrypt.compare(password, data.password)
-            .then(same => {
-                if (same) {
-                    console.log(auth.sign(data));
-                    //generar token
-                    return auth.sign(data);
-
+            .then(sonIguales => {
+                if (sonIguales === true) {
+                    // Generar token;
+                    return auth.sign({ ...data })
                 } else {
-                    throw new Error('Información inválida')
+                    throw new Error('Informacion invalida');
                 }
             });
-
     }
 
-    //data del usuario
-    const upsert = async (data) => {
+    async function upsert(data) {
         const authData = {
             id: data.id,
         }
-        /*Se hace de esta manera ya que si se quiere actualizar 
-        algo solo lo haga donde lo necesite*/
+
         if (data.username) {
             authData.username = data.username;
         }
-        //aquí encriptamos la contraseña, le pasamos la contraseña y el número de veces que genera el algoritmo, recomendable entre 5 y 10
+
         if (data.password) {
             authData.password = await bcrypt.hash(data.password, 5);
         }
+
         return store.upsert(TABLA, authData);
     }
-    return {
-        upsert,
-        login
-    }
 
+    return {
+        login,
+        upsert,
+    };
 };

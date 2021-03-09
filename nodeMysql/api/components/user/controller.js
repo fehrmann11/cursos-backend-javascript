@@ -1,48 +1,51 @@
-const {nanoid}= require('nanoid');
+const {nanoid} = require('nanoid');
 const auth = require('../auth');
+
 const TABLA = 'user';
 
-module.exports = (injectedStore) => {
+module.exports = function (injectedStore) {
     let store = injectedStore;
-    if(!store){
+    if (!store) {
         store = require('../../../store/dummy');
     }
-    //trae datos
-    const list = () => {
+
+    function list() {
         return store.list(TABLA);
     }
 
-    //trae un usuario
-    const get = (id) => {
-        return store.get(TABLA,id);
+    function get(id) {
+        return store.get(TABLA, id);
     }
 
-    const upsert = async(body) =>{
+    async function upsert(body) {
         const user = {
-            name:body.name,
-            username:body.username,
+            name: body.name,
+            username: body.username,
         }
-        if(body.id){
-            user.id = body.id
-        }else{
+        let isNew;
+
+        if (body.id) {
+            user.id = body.id;
+            isNew = false
+        } else {
             user.id = nanoid();
+            isNew = true;
         }
 
-        //cada vez que cambien el password o el usuario hay un upsert
-        if(body.password || body.username){
+        if ((body.password || body.username) && isNew===false) {
             await auth.upsert({
-                id:user.id,
-                username:user.username,
-                password:body.password,
+                id: user.id,
+                username: user.username,
+                password: body.password,
             })
         }
 
-        return store.upsert(TABLA,user);
+        return store.upsert(TABLA, user,isNew);
     }
 
     return {
         list,
         get,
-        upsert
+        upsert,
     };
 }

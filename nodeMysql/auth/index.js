@@ -1,44 +1,43 @@
 const jwt = require('jsonwebtoken');
 const config = require('../config');
+const error = require('../utils/error');
+
 const secret = config.jwt.secret;
 
-//firmar el token
-const sign = (data) =>{
-    console.log
-    return jwt.sign(data,secret);
-
+function sign(data) {
+    return jwt.sign(data, secret);
 }
 
-//función de verificación del token
-const verify = (token) =>{
-    return jwt.verify(token,secret);
+function verify(token) {
+    return jwt.verify(token, secret)
 }
 
 const check = {
-    own: (req,owner)=>{
+    own: function(req, owner) {
         const decoded = decodeHeader(req);
         console.log(decoded);
-    }
+
+        if (decoded.id !== owner) {
+            throw error('No puedes hacer esto', 401);
+        }
+    },
 }
 
-const getToken = (authorization)=>{
-    //Bearer jdasfosjaosafjhsaiofh
-    if(!authorization){
-        throw new Error('No viene el token');
-    }
-    //formato de token correcto
-    if(authorization.indexOf('Bearer')===-1){
-        throw new Error('Formato inválido');
+function getToken(auth) {
+    if (!auth) {
+        throw error('No viene token', 401);
     }
 
-    let token = authorization.replace('Bearer ','');
+    if (auth.indexOf('Bearer ') === -1) {
+        throw error('Formato invalido', 401);
+    }
 
+    let token = auth.replace('Bearer ', '');
     return token;
 }
 
-//decodificar el token
-const decodeHeader=(req)=>{
-    const authorization= req.headers.authorization || '';
+function decodeHeader(req) {
+    const authorization = req.headers.authorization || '';
     const token = getToken(authorization);
     const decoded = verify(token);
 
@@ -47,6 +46,7 @@ const decodeHeader=(req)=>{
     return decoded;
 }
 
-module.exports= {
+module.exports = {
     sign,
+    check,
 };
