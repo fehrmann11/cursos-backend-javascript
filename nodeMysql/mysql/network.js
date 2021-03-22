@@ -8,22 +8,27 @@ const router = express.Router();
 petición directa a la base de datos  esto tiene potencial para no 
 preocuparnos de como van a ser las funciones, los datos, etc. */
 
-const list = async(req,res,net) =>{
+const list = async(req,res,next) =>{
     const data = await Store.list(req.params.tabla);
     response.success(req,res,data,200);
 }
 
-const get = async(req,res,net) =>{
+const get = async(req,res,next) =>{
     const data = await Store.get(req.params.tabla,req.params.id);
     response.success(req,res,data,200);
 }
-const insert = async(req,res,net) =>{
+const insert = async(req,res,next) =>{
     const data = await Store.insert(req.params.tabla,req.body);
     response.success(req,res,data,200);
 }
-const upsert = async(req,res,net) =>{
+const upsert = async(req,res,next) =>{
     const data = await Store.upsert(req.params.tabla,req.body);
     response.success(req,res,data,200);
+}
+
+const query=async(req, res, next)=> {
+    const datos = await store.query(req.params.table, req.body.query, req.body.join)
+    response.success(req, res, data, 200);
 }
 
 //una función por cada tabla
@@ -31,7 +36,7 @@ router.get('/:tabla',list);
 router.get('/:tabla/:id',get);
 router.post('/:tabla',insert);
 router.put('/:tabla',upsert);
-
+router.post('/:table/query', query);
 
 
 

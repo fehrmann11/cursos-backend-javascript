@@ -16,6 +16,29 @@ function createRemoteDB(host, port) {
         return req('GET', table);
     }
 
+    function get(table,id){
+        return req('GET',table,id);
+    }
+
+    function insert(table, data) {
+		return req('POST', table, data);
+	}
+    function update(table, data) {
+		return req('PUT', table, data);
+	}
+
+    function upsert(table, data,isNew) {
+        console.log(isNew);
+		if (data.id && isNew ===false) {
+			return update(table, data);
+		}
+
+		return insert(table, data);
+	}
+    function query(table, query, join) {
+		return req('POST', table + '/query', { query, join });
+	}
+
     // function get(table, id)
     // function upsert(table, data)
     // function query(table, query, join)
@@ -23,6 +46,11 @@ function createRemoteDB(host, port) {
     function req(method, table, data) {
         let url = URL + '/' + table;
         body = '';
+        if(method==='GET' && data){
+            url +=`/${data}`
+        }else if (data){
+            body = JSON.stringify(data);
+        }
 
         return new Promise((resolve, reject) => {
             request({
@@ -46,6 +74,11 @@ function createRemoteDB(host, port) {
 
     return {
         list,
+        get,
+        insert,
+        update,
+        upsert,
+        query
     }
 }
 
