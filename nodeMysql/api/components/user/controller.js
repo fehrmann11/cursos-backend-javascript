@@ -32,20 +32,37 @@ module.exports = function (injectedStore) {
             isNew = true;
         }
 
-        if ((body.password || body.username) && isNew===false) {
+        if ((body.password || body.username)) { 
             await auth.upsert({
                 id: user.id,
                 username: user.username,
                 password: body.password,
-            })
+            },isNew)
         }
 
         return store.upsert(TABLA, user,isNew);
+    }
+
+    const follow = (from,to)=>{
+        return store.upsert(TABLA+'_follow',{
+            user_from: from,
+            user_to:to,
+        });
+    }
+
+    const following = async(user)=>{
+        const join ={}
+        join[TABLA] = 'user_to'; //{user: 'user_to'}
+        const query = {user_from:user};
+        console.log(join,TABLA,query);
+        return await store.query(TABLA+'_follow',query,join);
     }
 
     return {
         list,
         get,
         upsert,
+        follow,
+        following
     };
 }

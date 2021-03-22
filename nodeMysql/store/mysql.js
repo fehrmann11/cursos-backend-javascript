@@ -80,10 +80,18 @@ function upsert(table, data,isNew) {
 }
 
 // aquí está el problema
-function query(table, query) {
-    console.log(table,query)
+function query(table, query,join) {
+    //usuario , {username:}
+    let joinQuery='';
+    if(join){
+        const key = Object.keys(join)[0];
+        const val = join[key];
+        joinQuery = `JOIN ${key} ON ${table}.${val} = ${key}.id`;
+        console.log(joinQuery);
+    }
     return new Promise((resolve, reject) => {
-        connection.query(`SELECT * FROM ${table} WHERE username='${query.username}'`, (err, res) => {
+        //select * from user_follow JOIN user ON user_follow.user_to = user.id where user_follow.user_from: 'TWHo54EZ1FgVM4OpuMoHS'
+        connection.query(`SELECT * FROM ${table} ${joinQuery} WHERE ${table}.?`, query,(err, res) => {
             console.log(res);
             if (err) return reject(err);
             console.log(res[0])

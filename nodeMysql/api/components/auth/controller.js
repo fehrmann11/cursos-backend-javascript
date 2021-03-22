@@ -10,7 +10,6 @@ module.exports = function (injectedStore) {
     }
 
     async function login(username, password) {
-        console.log(username,password);
         const data = await store.query(TABLA, { username: username });
         
         return bcrypt.compare(password, data.password)
@@ -24,7 +23,8 @@ module.exports = function (injectedStore) {
             });
     }
 
-    async function upsert(data) {
+    //viene la data y además si es nueva o no!
+    async function upsert(data,isNew) {
         const authData = {
             id: data.id,
         }
@@ -37,7 +37,7 @@ module.exports = function (injectedStore) {
             authData.password = await bcrypt.hash(data.password, 5);
         }
 
-        return store.upsert(TABLA, authData);
+        return store.upsert(TABLA, authData,isNew);
     }
 
     return {

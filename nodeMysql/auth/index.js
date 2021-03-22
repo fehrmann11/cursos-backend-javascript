@@ -14,16 +14,21 @@ function verify(token) {
 
 const check = {
     own: function(req, owner) {
+        //nick y el nick=!
         const decoded = decodeHeader(req);
-        console.log(decoded);
 
         if (decoded.id !== owner) {
             throw error('No puedes hacer esto', 401);
         }
     },
+
+    logged: function(req) {
+        const decoded = decodeHeader(req);
+    },
 }
 
 function getToken(auth) {
+    
     if (!auth) {
         throw error('No viene token', 401);
     }
@@ -33,15 +38,19 @@ function getToken(auth) {
     }
 
     let token = auth.replace('Bearer ', '');
+   
     return token;
 }
 
+//Esta función decodifica el token
 function decodeHeader(req) {
+    //console.log(req.headers.authorization)
     const authorization = req.headers.authorization || '';
     const token = getToken(authorization);
     const decoded = verify(token);
 
     req.user = decoded;
+
 
     return decoded;
 }

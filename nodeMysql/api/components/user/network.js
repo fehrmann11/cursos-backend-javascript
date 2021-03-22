@@ -6,8 +6,10 @@ const Controller = require('./index');
 
 const router = express.Router();
 
-// Routes
-router.get('/', list)
+// Routes secure es para acceder solo con el token! y saber que es el
+router.get('/', list);
+router.post('/follow/:id',secure('follow'),follow);
+router.get('/:id/following',following);
 router.get('/:id', get);
 router.post('/', upsert);
 router.put('/', secure('update'), upsert);
@@ -35,6 +37,22 @@ function upsert(req, res, next) {
             response.success(req, res, user, 201);
         })
         .catch(next);
+}
+
+function follow(req, res, next) {
+    Controller.follow(req.user.id,req.params.id)
+        .then(data=>{
+            response.success(req, res, data, 201)
+        })
+        .catch(next);
+}
+
+function following(req, res, next) {
+    Controller.following(req.params.id)
+        .then(data=>{
+            response.success(req, res, data, 201)
+        })
+        .catch(next)
 }
 
 module.exports = router;
