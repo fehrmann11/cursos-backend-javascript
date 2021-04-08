@@ -2,15 +2,30 @@ const nanoid = require('nanoid');
 const auth = require('../auth');
 
 const TABLA = 'user';
-
-module.exports = function (injectedStore) {
+/*Ahora inyectaremos el cache igual */
+module.exports = function (injectedStore,injectedCache) {
+    let cache = injectedCache;
     let store = injectedStore;
     if (!store) {
         store = require('../../../store/dummy');
     }
+    if (!cache) {
+        cache = require('../../../store/dummy');
+    }
 
-    function list() {
-        return store.list(TABLA);
+    /*Las funciones que estaban en cache demoraban
+    casi la mitad de lo que demora hacer la 
+    consulta a la base de datos. Pero es más complejo.*/
+    async function list() {
+        let users = await cache.list(TABLA);
+        if(!users){
+            console.log("no estaba en cache. Buscando en base de datos")
+            users = await store.list(TABLA);
+            cache.upsert(TABLA,users);
+        }else{
+            console.log("nos traemos datos de cache")
+        }
+        return users;
     }
 
     function get(id) {
